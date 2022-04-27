@@ -7,6 +7,7 @@ import {
 } from './styles/ProductCard.styled';
 import { ButtonStyled } from './styles/Button';
 import { GrCart } from 'react-icons/gr';
+import { GET_ACTIVE_ORDER } from '../graphql/queries';
 import { ADD_ITEM_TO_ORDER } from '../graphql/mutations';
 import { useMutation } from '@apollo/client';
 
@@ -16,6 +17,11 @@ export function ProductCard(props: Product) {
     { productVariantId: number | string; quantity: number }
   >(ADD_ITEM_TO_ORDER, {
     variables: { productVariantId: Number(props.variants[0].id), quantity: 1 },
+    onCompleted (data) {
+      if (data) {
+        console.log(data);
+      }
+    }
   });
 
   return (

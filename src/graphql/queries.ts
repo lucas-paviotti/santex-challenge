@@ -1,5 +1,22 @@
 import { gql } from '@apollo/client';
 
+export const ORDER_FRAGMENT = gql`
+  fragment ActiveOrder on Order {
+    id
+    subTotal
+    lines {
+      id
+      quantity
+      unitPrice
+      linePrice
+      productVariant {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const GET_PRODUCTS = gql`
   query {
     products {
@@ -17,4 +34,13 @@ export const GET_PRODUCTS = gql`
       }
     }
   }
+`;
+
+export const GET_ACTIVE_ORDER = gql`
+  {
+    activeOrder {
+      ...ActiveOrder
+    }
+  }
+  ${ORDER_FRAGMENT}
 `;
