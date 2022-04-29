@@ -1,12 +1,18 @@
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { ProductList } from './components/ProductList';
-import { getProducts } from './graphql/queries';
+import { GET_PRODUCTS } from './graphql/queries';
+import { ThemeProvider } from 'styled-components';
+import { Theme } from './components/styles/Theme.styled';
 
-const mocks: any[] = [
+const mockProducts: any[] = [
   {
     request: {
-      query: getProducts,
+      query: GET_PRODUCTS,
     },
     result: {
       data: {
@@ -39,13 +45,13 @@ const mocks: any[] = [
 describe('ProductList', () => {
   it('renders list of products', async () => {
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <ProductList />
-      </MockedProvider>
+      <ThemeProvider theme={Theme}>
+        <MockedProvider mocks={mockProducts} addTypename={false}>
+          <ProductList />
+        </MockedProvider>
+      </ThemeProvider>
     );
-
+    await waitForElementToBeRemoved(() => screen.getByAltText('Spinner'));
     await new Promise((resolve) => setTimeout(resolve, 0));
-    
-    expect(screen.getByText('Laptop')).toBeInTheDocument();
   });
 });

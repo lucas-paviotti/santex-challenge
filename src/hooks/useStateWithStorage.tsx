@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const getLocalStorage = (key: string, defaultValue: unknown) => {
-  // conseguir localstorage, si tiene retornar valor
-  // sino retornar initialValue
+  const localStorageContent = localStorage.getItem(key);
+
+  if (localStorageContent) {
+    return JSON.parse(localStorageContent);
+  } else {
+    return defaultValue;
+  }
 };
 
 export default function useStateWithStorage(
@@ -13,7 +18,9 @@ export default function useStateWithStorage(
     return getLocalStorage(key, defaultValue);
   });
 
-  // Falta grabar a localstorage
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [value]);
 
   return [value, setValue];
 }

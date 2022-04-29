@@ -1,4 +1,4 @@
-import { Product, OrderData } from '../types';
+import { Product, Order } from '../types';
 import { formatter } from '../utils/Utils';
 import {
   ProductCardStyled,
@@ -10,18 +10,27 @@ import { GrCart } from 'react-icons/gr';
 import { GET_ACTIVE_ORDER } from '../graphql/queries';
 import { ADD_ITEM_TO_ORDER } from '../graphql/mutations';
 import { useMutation } from '@apollo/client';
+import { useContext } from 'react';
+import { OrderContext } from '../context/OrderContext';
 
 export function ProductCard(props: Product) {
+  const { setOrder } = useContext(OrderContext);
+
+  console.log(props)
+
   const [addItemToOrder] = useMutation<
-    { addItemToOrder: OrderData },
+    { addItemToOrder: Order },
     { productVariantId: number | string; quantity: number }
   >(ADD_ITEM_TO_ORDER, {
     variables: { productVariantId: Number(props.variants[0].id), quantity: 1 },
-    onCompleted (data) {
+    onCompleted(data) {
       if (data) {
-        console.log(data);
+        setOrder(data.addItemToOrder);
       }
-    }
+    },
+    refetchQueries: [
+      { query: GET_ACTIVE_ORDER }
+    ],
   });
 
   return (
