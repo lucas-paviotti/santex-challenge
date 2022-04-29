@@ -16,8 +16,6 @@ import { OrderContext } from '../context/OrderContext';
 export function ProductCard(props: Product) {
   const { setOrder } = useContext(OrderContext);
 
-  console.log(props)
-
   const [addItemToOrder] = useMutation<
     { addItemToOrder: Order },
     { productVariantId: number | string; quantity: number }

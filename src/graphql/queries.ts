@@ -19,7 +19,9 @@ export const ORDER_FRAGMENT = gql`
 
 export const GET_PRODUCTS = gql`
   query {
-    products {
+    products(options: {
+      take:12
+    }) {
       items {
         id
         name
